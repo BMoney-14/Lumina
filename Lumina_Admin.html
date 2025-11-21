@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Villa Pricing Demo | Admin + Front</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .input-base {
+      @apply w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+  <!-- Top bar -->
+  <header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="font-semibold text-slate-800">
+        🏡 Villa Pricing System (Demo)
+      </div>
+      <div class="flex gap-2 text-sm">
+        <button id="btnAdminTab"
+                class="px-3 py-1.5 rounded-full bg-sky-600 text-white font-medium">
+          หลังบ้าน (Admin)
+        </button>
+        <button id="btnFrontTab"
+                class="px-3 py-1.5 rounded-full bg-slate-200 text-slate-700 font-medium">
+          หน้าบ้าน (ลูกค้า)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- ADMIN SECTION -->
+    <section id="adminSection" class="space-y-6">
+      <h1 class="text-xl font-semibold text-slate-800">
+        หลังบ้าน: ตั้งค่าเรทราคาบ้านพัก & แพ็กจำนวนคน
+      </h1>
+
+      <!-- เลือกบ้าน -->
+      <div class="bg-white rounded-2xl shadow-sm p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="space-y-1">
+          <div class="text-sm font-medium text-slate-700">เลือกบ้านพัก</div>
+          <select id="adminVillaSelect"
+                  class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400">
+          </select>
+        </div>
+        <div class="space-y-1">
+          <div class="text-sm font-medium text-slate-700">เลือกเรทราคา</div>
+          <select id="adminRateSelect"
+                  class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400">
+          </select>
+        </div>
+        <!-- ปุ่มเพิ่มเรทใหม่ (demo: แค่ clone logic) -->
+        <button id="btnCloneRate"
+                class="self-start md:self-end px-4 py-2 text-sm rounded-xl bg-emerald-500 text-white font-medium hover:bg-emerald-600">
+          คัดลอกเรทนี้เป็นเรทใหม่ (Demo)
+        </button>
+      </div>
+
+      <!-- ฟอร์มเรทราคา -->
+      <div class="bg-white rounded-2xl shadow-sm p-5 space-y-6">
+        <h2 class="text-lg font-semibold text-slate-800 mb-2">รายละเอียดเรทราคา</h2>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <!-- ชื่อเรท -->
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700">ชื่อเรท</label>
+            <input id="rateNameInput" type="text"
+                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400" />
+          </div>
+
+          <!-- โหมดราคา -->
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700">วิธีคิดราคา</label>
+            <select id="pricingModeSelect"
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400">
+              <option value="TIER_PLUS_EXTRA">แพ็ก + เพิ่มรายหัว (TIER_PLUS_EXTRA)</option>
+              <option value="TIER_ONLY">ราคาเป็นแพ็กตามช่วงคน (TIER_ONLY)</option>
+            </select>
+            <p class="text-xs text-slate-500">
+              TIER_PLUS_EXTRA: เลือกแพ็กที่จำนวนคนไม่เกิน แล้วคิดเพิ่มตามหัวที่เกินจากแพ็ก
+            </p>
+          </div>
+
+          <!-- Extra per guest -->
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700">ราคาเพิ่มต่อคนจากแพ็ก (บาท/คน)</label>
+            <input id="extraPerGuestInput" type="number" min="0" step="10"
+                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400" />
+          </div>
+
+          <!-- Active toggle -->
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700">สถานะเรท</label>
+            <div class="flex items-center gap-2">
+              <input id="rateActiveCheckbox" type="checkbox" class="h-4 w-4">
+              <span class="text-sm text-slate-700">เปิดใช้งานเรทนี้</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ตาราง Tier -->
+        <div class="mt-4 border-t pt-4 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="text-sm font-semibold text-slate-800">แพ็กจำนวนคน + ราคา (Tier)</h3>
+            <button id="btnAddTier"
+                    class="px-3 py-1.5 rounded-lg bg-sky-500 text-white text-xs font-medium hover:bg-sky-600">
+              + เพิ่มแพ็ก
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm text-left border border-slate-200 rounded-lg overflow-hidden">
+              <thead class="bg-slate-50 text-slate-600">
+                <tr>
+                  <th class="px-3 py-2 border-b border-slate-200">#</th>
+                  <th class="px-3 py-2 border-b border-slate-200">จำนวนคนในแพ็ก</th>
+                  <th class="px-3 py-2 border-b border-slate-200">ราคาแพ็ก (บาท/คืน)</th>
+                  <th class="px-3 py-2 border-b border-slate-200">ตัวอย่าง</th>
+                  <th class="px-3 py-2 border-b border-slate-200 text-right">ลบ</th>
+                </tr>
+              </thead>
+              <tbody id="tierTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- แถวปุ่ม & preview -->
+        <div class="mt-4 grid md:grid-cols-2 gap-6 items-start">
+          <!-- Save (แค่ update state ใน JS) -->
+          <div class="space-y-3">
+            <button id="btnSaveRate"
+                    class="w-full md:w-auto px-4 py-2 rounded-xl bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600">
+              💾 บันทึกเรท (ในหน้า Demo)
+            </button>
+            <p class="text-xs text-slate-500">
+              *ใน Demo นี้ข้อมูลจะถูกเก็บในตัวแปร JavaScript เท่านั้น ยังไม่ได้เชื่อมต่อฐานข้อมูลจริง
+            </p>
+          </div>
+
+          <!-- Preview คำนวณราคา -->
+          <div class="border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2">
+            <div class="text-sm font-semibold text-slate-800">🔍 ตัวอย่างคำนวณราคา</div>
+            <div class="flex flex-wrap gap-3 items-end">
+              <div>
+                <label class="block text-xs text-slate-600 mb-1">จำนวนคน</label>
+                <input id="previewGuestInput" type="number" min="1" value="8"
+                       class="w-24 border border-slate-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-600 mb-1">จำนวนคืน</label>
+                <input id="previewNightInput" type="number" min="1" value="1"
+                       class="w-24 border border-slate-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400">
+              </div>
+              <button id="btnPreviewPrice"
+                      class="px-3 py-1.5 rounded-lg bg-sky-500 text-white text-xs font-medium hover:bg-sky-600">
+                คำนวณ
+              </button>
+            </div>
+            <div id="previewPriceResult" class="text-xs text-slate-700 mt-2 whitespace-pre-line">
+              (ผลลัพธ์จะแสดงที่นี่)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FRONT SECTION -->
+    <section id="frontSection" class="hidden space-y-6">
+      <h1 class="text-xl font-semibold text-slate-800">
+        หน้าบ้าน: ลูกค้าเลือกจำนวนคน & ดูราคา
+      </h1>
+
+      <div class="bg-white rounded-2xl shadow-sm p-5 space-y-5">
+        <!-- เลือกบ้าน -->
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700">เลือกบ้านพัก</label>
+            <select id="frontVillaSelect"
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400">
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700">วันเช็คอิน (Demo)</label>
+            <input id="frontCheckInInput" type="date"
+                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400">
+          </div>
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700">จำนวนคืน</label>
+            <input id="frontNightInput" type="number" min="1" value="1"
+                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400">
+          </div>
+        </div>
+
+        <!-- จำนวนคน -->
+        <div class="flex flex-wrap items-end gap-4 mt-2">
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700">จำนวนคนเข้าพัก</label>
+            <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden">
+              <button id="btnGuestMinus"
+                      class="px-3 py-2 text-slate-600 hover:bg-slate-100 text-lg">−</button>
+              <input id="frontGuestInput" type="number" min="1" value="8"
+                     class="w-20 text-center border-x border-slate-200 py-2 text-sm focus:outline-none">
+              <button id="btnGuestPlus"
+                      class="px-3 py-2 text-slate-600 hover:bg-slate-100 text-lg">+</button>
+            </div>
+          </div>
+          <button id="btnFrontCalc"
+                  class="px-4 py-2 rounded-xl bg-sky-600 text-white text-sm font-medium hover:bg-sky-700">
+            คำนวณราคา
+          </button>
+        </div>
+
+        <!-- กล่องราคา -->
+        <div id="frontPriceBox" class="mt-5 border border-slate-200 rounded-2xl p-4 bg-slate-50 hidden">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div>
+              <div id="frontPriceTitle" class="text-sm font-semibold text-slate-800">
+                ราคาสำหรับ X คน / Y คืน
+              </div>
+              <div id="frontPriceMain" class="text-2xl font-bold text-emerald-600 mt-1">
+                0 บาท
+              </div>
+            </div>
+            <div class="text-xs text-slate-500">
+              ราคานี้ใช้สำหรับการจำลองหน้าจอเท่านั้น<br>
+              ในระบบจริงจะคิดตามเรทที่กำหนดในหลังบ้าน ณ วันที่จอง
+            </div>
+          </div>
+
+          <div id="frontPriceDetails" class="mt-3 text-sm text-slate-700 whitespace-pre-line">
+          </div>
+
+          <!-- รายการแพ็กทั้งหมด -->
+          <div id="frontTierList" class="mt-4 border-t border-slate-200 pt-3 text-xs text-slate-700">
+          </div>
+
+          <div class="mt-4 flex justify-end">
+            <button class="px-4 py-2 rounded-xl bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600">
+              ดำเนินการจองต่อ (Demo)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // -----------------------------
+    // Mock Data (แทน DB)
+    // -----------------------------
+    const villas = [
+      {
+        id: 'villa1',
+        code: 'VILLA-A1',
+        name: 'Lumina Poolvilla Sunset',
+        maxGuests: 20
+      },
+      {
+        id: 'villa2',
+        code: 'VILLA-B1',
+        name: 'Ocean Breeze Villa Blue',
+        maxGuests: 16
+      }
+    ];
+
+    // rates: ผูกกับ villaId + tiers
+    let villaRates = [
+      {
+        id: 'rate1',
+        villaId: 'villa1',
+        rateName: 'Default Rate',
+        pricingMode: 'TIER_PLUS_EXTRA',
+        extraPerGuest: 300,
+        isActive: true,
+        tiers: [
+          { includedGuest: 7, basePrice: 3990 },
+          { includedGuest: 10, basePrice: 4990 },
+          { includedGuest: 16, basePrice: 6990 }
+        ]
+      },
+      {
+        id: 'rate2',
+        villaId: 'villa2',
+        rateName: 'Default Rate',
+        pricingMode: 'TIER_ONLY',
+        extraPerGuest: 0,
+        isActive: true,
+        tiers: [
+          { includedGuest: 4, basePrice: 3500 },
+          { includedGuest: 8, basePrice: 5500 },
+          { includedGuest: 12, basePrice: 7500 }
+        ]
+      }
+    ];
+
+    // -----------------------------
+    // Helper: format number with comma
+    // -----------------------------
+    function formatBaht(num) {
+      return num.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+    }
+
+    // -----------------------------
+    // Helper: calculate price
+    // -----------------------------
+    function calcPriceForGuests(villaId, guestCount, nights) {
+      const relevantRates = villaRates.filter(r => r.villaId === villaId && r.isActive);
+      if (!relevantRates.length) return null;
+
+      const rate = relevantRates[0]; // demo: ใช้เรทแรก
+      if (!rate.tiers || !rate.tiers.length) return null;
+
+      // sort tiers by includedGuest asc
+      const tiers = [...rate.tiers].sort((a, b) => a.includedGuest - b.includedGuest);
+
+      // หาตัวที่ "มากที่สุดแต่ไม่เกิน guestCount"
+      let chosenTier = null;
+      for (const t of tiers) {
+        if (t.includedGuest <= guestCount) chosenTier = t;
+      }
+      // ถ้าทุก tier มากกว่า guestCount → ใช้ tier แรกสุด
+      if (!chosenTier) chosenTier = tiers[0];
+
+      let baseGuests = chosenTier.includedGuest;
+      let basePricePerNight = chosenTier.basePrice;
+      let extraGuests = 0;
+      let extraPerGuest = 0;
+      let extraPricePerNight = 0;
+
+      if (rate.pricingMode === 'TIER_PLUS_EXTRA') {
+        extraPerGuest = rate.extraPerGuest || 0;
+        extraGuests = Math.max(guestCount - baseGuests, 0);
+        extraPricePerNight = extraGuests * extraPerGuest;
+      } else {
+        // TIER_ONLY: ถ้า guest > max tier ก็ใช้ tier ที่ใหญ่สุดไปเลย
+        if (guestCount > baseGuests) baseGuests = chosenTier.includedGuest;
+        extraGuests = 0;
+        extraPricePerNight = 0;
+      }
+
+      const perNight = basePricePerNight + extraPricePerNight;
+      const total = perNight * nights;
+
+      return {
+        rate,
+        tiers,
+        guestCount,
+        nights,
+        baseTier: chosenTier,
+        baseGuests,
+        basePricePerNight,
+        extraGuests,
+        extraPerGuest,
+        extraPricePerNight,
+        perNight,
+        total
+      };
+    }
+
+    // -----------------------------
+    // DOM Elements
+    // -----------------------------
+    const adminSection = document.getElementById('adminSection');
+    const frontSection = document.getElementById('frontSection');
+    const btnAdminTab = document.getElementById('btnAdminTab');
+    const btnFrontTab = document.getElementById('btnFrontTab');
+
+    const adminVillaSelect = document.getElementById('adminVillaSelect');
+    const adminRateSelect = document.getElementById('adminRateSelect');
+    const rateNameInput = document.getElementById('rateNameInput');
+    const pricingModeSelect = document.getElementById('pricingModeSelect');
+    const extraPerGuestInput = document.getElementById('extraPerGuestInput');
+    const rateActiveCheckbox = document.getElementById('rateActiveCheckbox');
+    const tierTableBody = document.getElementById('tierTableBody');
+    const btnAddTier = document.getElementById('btnAddTier');
+    const btnSaveRate = document.getElementById('btnSaveRate');
+    const btnCloneRate = document.getElementById('btnCloneRate');
+
+    const previewGuestInput = document.getElementById('previewGuestInput');
+    const previewNightInput = document.getElementById('previewNightInput');
+    const btnPreviewPrice = document.getElementById('btnPreviewPrice');
+    const previewPriceResult = document.getElementById('previewPriceResult');
+
+    const frontVillaSelect = document.getElementById('frontVillaSelect');
+    const frontCheckInInput = document.getElementById('frontCheckInInput');
+    const frontNightInput = document.getElementById('frontNightInput');
+    const frontGuestInput = document.getElementById('frontGuestInput');
+    const btnGuestMinus = document.getElementById('btnGuestMinus');
+    const btnGuestPlus = document.getElementById('btnGuestPlus');
+    const btnFrontCalc = document.getElementById('btnFrontCalc');
+
+    const frontPriceBox = document.getElementById('frontPriceBox');
+    const frontPriceTitle = document.getElementById('frontPriceTitle');
+    const frontPriceMain = document.getElementById('frontPriceMain');
+    const frontPriceDetails = document.getElementById('frontPriceDetails');
+    const frontTierList = document.getElementById('frontTierList');
+
+    // -----------------------------
+    // Tab switching
+    // -----------------------------
+    btnAdminTab.addEventListener('click', () => {
+      adminSection.classList.remove('hidden');
+      frontSection.classList.add('hidden');
+      btnAdminTab.classList.remove('bg-slate-200','text-slate-700');
+      btnAdminTab.classList.add('bg-sky-600','text-white');
+      btnFrontTab.classList.remove('bg-sky-600','text-white');
+      btnFrontTab.classList.add('bg-slate-200','text-slate-700');
+    });
+
+    btnFrontTab.addEventListener('click', () => {
+      adminSection.classList.add('hidden');
+      frontSection.classList.remove('hidden');
+      btnFrontTab.classList.remove('bg-slate-200','text-slate-700');
+      btnFrontTab.classList.add('bg-sky-600','text-white');
+      btnAdminTab.classList.remove('bg-sky-600','text-white');
+      btnAdminTab.classList.add('bg-slate-200','text-slate-700');
+    });
+
+    // -----------------------------
+    // Init selects
+    // -----------------------------
+    function populateVillaSelects() {
+      adminVillaSelect.innerHTML = '';
+      frontVillaSelect.innerHTML = '';
+      villas.forEach(v => {
+        const opt1 = document.createElement('option');
+        opt1.value = v.id;
+        opt1.textContent = v.name;
+        adminVillaSelect.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = v.id;
+        opt2.textContent = v.name;
+        frontVillaSelect.appendChild(opt2);
+      });
+    }
+
+    function populateRateSelectForAdmin() {
+      const villaId = adminVillaSelect.value;
+      const rates = villaRates.filter(r => r.villaId === villaId);
+      adminRateSelect.innerHTML = '';
+      rates.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.id;
+        opt.textContent = r.rateName + (r.isActive ? '' : ' (ปิดใช้งาน)');
+        adminRateSelect.appendChild(opt);
+      });
+      if (!rates.length) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = 'ยังไม่มีเรทราคา';
+        adminRateSelect.appendChild(opt);
+      }
+      loadRateToForm();
+    }
+
+    function loadRateToForm() {
+      const rateId = adminRateSelect.value;
+      const rate = villaRates.find(r => r.id === rateId);
+      if (!rate) {
+        rateNameInput.value = '';
+        pricingModeSelect.value = 'TIER_PLUS_EXTRA';
+        extraPerGuestInput.value = '';
+        rateActiveCheckbox.checked = false;
+        tierTableBody.innerHTML = '';
+        return;
+      }
+      rateNameInput.value = rate.rateName;
+      pricingModeSelect.value = rate.pricingMode;
+      extraPerGuestInput.value = rate.extraPerGuest;
+      rateActiveCheckbox.checked = !!rate.isActive;
+
+      // render tiers
+      tierTableBody.innerHTML = '';
+      const tiers = [...rate.tiers].sort((a, b) => a.includedGuest - b.includedGuest);
+      tiers.forEach((t, index) => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="px-3 py-2">${index + 1}</td>
+          <td class="px-3 py-2">
+            <input type="number" min="1" value="${t.includedGuest}"
+                   class="w-24 border border-slate-300 rounded-lg px-2 py-1 text-sm">
+          </td>
+          <td class="px-3 py-2">
+            <input type="number" min="0" step="10" value="${t.basePrice}"
+                   class="w-32 border border-slate-300 rounded-lg px-2 py-1 text-sm">
+          </td>
+          <td class="px-3 py-2 text-xs text-slate-600">
+            รวมสูงสุด ${t.includedGuest} คน = ${formatBaht(t.basePrice)} บาท/คืน
+          </td>
+          <td class="px-3 py-2 text-right">
+            <button class="text-xs text-rose-600 hover:text-rose-700">ลบ</button>
+          </td>
+        `;
+        const delBtn = tr.querySelector('button');
+        delBtn.addEventListener('click', () => {
+          tr.remove();
+        });
+        tierTableBody.appendChild(tr);
+      });
+    }
+
+    // -----------------------------
+    // Admin events
+    // -----------------------------
+    adminVillaSelect.addEventListener('change', populateRateSelectForAdmin);
+    adminRateSelect.addEventListener('change', loadRateToForm);
+
+    btnAddTier.addEventListener('click', () => {
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-slate-50';
+      tr.innerHTML = `
+        <td class="px-3 py-2">#</td>
+        <td class="px-3 py-2">
+          <input type="number" min="1" value="1"
+                 class="w-24 border border-slate-300 rounded-lg px-2 py-1 text-sm">
+        </td>
+        <td class="px-3 py-2">
+          <input type="number" min="0" step="10" value="1000"
+                 class="w-32 border border-slate-300 rounded-lg px-2 py-1 text-sm">
+        </td>
+        <td class="px-3 py-2 text-xs text-slate-600">
+          รวมสูงสุด 1 คน = 1,000 บาท/คืน
+        </td>
+        <td class="px-3 py-2 text-right">
+          <button class="text-xs text-rose-600 hover:text-rose-700">ลบ</button>
+        </td>
+      `;
+      tr.querySelector('button').addEventListener('click', () => tr.remove());
+      tierTableBody.appendChild(tr);
+    });
+
+    btnSaveRate.addEventListener('click', () => {
+      const rateId = adminRateSelect.value;
+      const rate = villaRates.find(r => r.id === rateId);
+      if (!rate) {
+        alert('ยังไม่มีเรทราคาให้บันทึก (ใน demo นี้ให้ใช้เรทที่มีอยู่ก่อน)');
+        return;
+      }
+
+      // update header fields
+      rate.rateName = rateNameInput.value || 'New Rate';
+      rate.pricingMode = pricingModeSelect.value;
+      rate.extraPerGuest = parseFloat(extraPerGuestInput.value) || 0;
+      rate.isActive = rateActiveCheckbox.checked;
+
+      // update tiers
+      const rows = Array.from(tierTableBody.querySelectorAll('tr'));
+      const newTiers = [];
+      for (const row of rows) {
+        const inputs = row.querySelectorAll('input');
+        const g = parseInt(inputs[0].value, 10);
+        const p = parseFloat(inputs[1].value);
+        if (!isNaN(g) && !isNaN(p)) {
+          newTiers.push({ includedGuest: g, basePrice: p });
+        }
+      }
+      newTiers.sort((a, b) => a.includedGuest - b.includedGuest);
+      rate.tiers = newTiers;
+
+      populateRateSelectForAdmin();
+      alert('บันทึกเรท (ในตัวแปร demo) เรียบร้อยแล้ว');
+    });
+
+    btnPreviewPrice.addEventListener('click', () => {
+      const villaId = adminVillaSelect.value;
+      const guests = parseInt(previewGuestInput.value, 10) || 1;
+      const nights = parseInt(previewNightInput.value, 10) || 1;
+      const result = calcPriceForGuests(villaId, guests, nights);
+      if (!result) {
+        previewPriceResult.textContent = 'ไม่พบเรทหรือแพ็กสำหรับบ้านนี้';
+        return;
+      }
+      const {
+        baseTier,
+        basePricePerNight,
+        extraGuests,
+        extraPerGuest,
+        extraPricePerNight,
+        perNight,
+        total
+      } = result;
+
+      let text = `จำนวนคน: ${guests} คน / ${nights} คืน\n`;
+      text += `แพ็กที่ใช้: แพ็ก ${baseTier.includedGuest} คน = ${formatBaht(basePricePerNight)} บาท/คืน\n`;
+      if (extraGuests > 0 && extraPerGuest > 0) {
+        text += `คนเกินจากแพ็ก: ${extraGuests} คน x ${formatBaht(extraPerGuest)} บาท = ${formatBaht(extraPricePerNight)} บาท/คืน\n`;
+      }
+      text += `รวมต่อคืน: ${formatBaht(perNight)} บาท\n`;
+      text += `รวมทั้งทริป: ${formatBaht(total)} บาท`;
+      previewPriceResult.textContent = text;
+    });
+
+    btnCloneRate.addEventListener('click', () => {
+      const currentRateId = adminRateSelect.value;
+      const currentRate = villaRates.find(r => r.id === currentRateId);
+      if (!currentRate) {
+        alert('ยังไม่มีเรทให้คัดลอก');
+        return;
+      }
+      const newId = 'rate_' + Math.random().toString(36).slice(2, 8);
+      const clone = {
+        ...currentRate,
+        id: newId,
+        rateName: currentRate.rateName + ' (Copy)'
+      };
+      villaRates.push(clone);
+      populateRateSelectForAdmin();
+      adminRateSelect.value = newId;
+      loadRateToForm();
+    });
+
+    // -----------------------------
+    // Front events
+    // -----------------------------
+    btnGuestMinus.addEventListener('click', () => {
+      let v = parseInt(frontGuestInput.value, 10) || 1;
+      v = Math.max(1, v - 1);
+      frontGuestInput.value = v;
+    });
+
+    btnGuestPlus.addEventListener('click', () => {
+      let v = parseInt(frontGuestInput.value, 10) || 1;
+      v = v + 1;
+      frontGuestInput.value = v;
+    });
+
+    btnFrontCalc.addEventListener('click', () => {
+      const villaId = frontVillaSelect.value;
+      const nights = parseInt(frontNightInput.value, 10) || 1;
+      const guests = parseInt(frontGuestInput.value, 10) || 1;
+      const result = calcPriceForGuests(villaId, guests, nights);
+      if (!result) {
+        frontPriceBox.classList.remove('hidden');
+        frontPriceTitle.textContent = 'ไม่พบเรทหรือแพ็กสำหรับบ้านนี้';
+        frontPriceMain.textContent = '-';
+        frontPriceDetails.textContent = '';
+        frontTierList.textContent = '';
+        return;
+      }
+      const {
+        rate,
+        tiers,
+        baseTier,
+        basePricePerNight,
+        extraGuests,
+        extraPerGuest,
+        extraPricePerNight,
+        perNight,
+        total
+      } = result;
+
+      frontPriceBox.classList.remove('hidden');
+      frontPriceTitle.textContent = `ราคาสำหรับ ${guests} คน / ${nights} คืน`;
+      frontPriceMain.textContent = `${formatBaht(total)} บาท`;
+
+      let detail = '';
+      detail += `เรท: ${rate.rateName} (${rate.pricingMode})\n`;
+      detail += `แพ็กที่ใช้: แพ็ก ${baseTier.includedGuest} คน = ${formatBaht(basePricePerNight)} บาท/คืน\n`;
+      if (extraGuests > 0 && extraPerGuest > 0) {
+        detail += `คนเกินจากแพ็ก: ${extraGuests} คน x ${formatBaht(extraPerGuest)} บาท = ${formatBaht(extraPricePerNight)} บาท/คืน\n`;
+      }
+      detail += `รวมต่อคืน: ${formatBaht(perNight)} บาท\n`;
+      detail += `จำนวนคืน: ${nights} คืน\n`;
+      detail += `รวมทั้งทริป: ${formatBaht(total)} บาท`;
+      frontPriceDetails.textContent = detail;
+
+      // tier list
+      let tierText = 'แพ็กที่มีให้สำหรับเรทนี้:\n';
+      tiers.forEach(t => {
+        tierText += `• แพ็ก ${t.includedGuest} คน – ${formatBaht(t.basePrice)} บาท/คืน\n`;
+      });
+      if (rate.pricingMode === 'TIER_PLUS_EXTRA' && rate.extraPerGuest) {
+        tierText += `\nราคานี้ใช้รูปแบบ: แพ็ก + เพิ่มรายหัว คนเกินจากแพ็กคิดเพิ่ม ${formatBaht(rate.extraPerGuest)} บาท/คน/คืน`;
+      }
+      frontTierList.textContent = tierText;
+    });
+
+    // -----------------------------
+    // Init
+    // -----------------------------
+    function init() {
+      populateVillaSelects();
+      populateRateSelectForAdmin();
+
+      // ตั้งค่า default วันที่หน้าบ้าน
+      const today = new Date().toISOString().slice(0, 10);
+      frontCheckInInput.value = today;
+
+      // default: แสดง admin ก่อน
+      adminSection.classList.remove('hidden');
+      frontSection.classList.add('hidden');
+    }
+
+    init();
+  </script>
+</body>
+</html>

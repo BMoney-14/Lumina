@@ -1,0 +1,608 @@
+/*
+ * Global styles for the pool villa website.
+ * The design aims for a light, luxurious aesthetic with pastel accents and
+ * generous whitespace. It includes responsive breakpoints for mobile
+ * devices, typography defaults, and reusable utility classes for
+ * consistency across pages.
+ */
+
+/* CSS Variables for colour palette */
+:root {
+  --color-primary: #7fc6cf; /* soft teal for buttons and highlights */
+  --color-secondary: #f7c9d1; /* light pink accent */
+  --color-accent: #fdf2e8; /* pale cream background tint */
+  --color-dark: #36454f; /* dark slate for text */
+  --color-light: #ffffff; /* pure white */
+  --color-muted: #f5f5f5; /* light grey for subtle backgrounds */
+}
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--color-dark);
+  background-color: var(--color-light);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Header and navigation */
+header {
+  background: var(--color-light);
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+nav ul {
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+nav a:hover {
+  color: var(--color-primary);
+}
+
+/* Active navigation link */
+nav a.active {
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 2px;
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+/* Hero section */
+.hero {
+  position: relative;
+  height: 80vh;
+  background-image: url('../assets/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-dark);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(1px);
+}
+
+.hero-content {
+  position: relative;
+  max-width: 700px;
+  text-align: center;
+  padding: 1rem;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-light);
+}
+
+.btn-primary:hover {
+  background: #6aaeb6;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-light);
+}
+
+/* Features section */
+.features {
+  padding: 4rem 0;
+  background: var(--color-accent);
+}
+
+.features h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-dark);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+}
+
+.feature-item {
+  background: var(--color-light);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+}
+
+.feature-item:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.feature-item h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.feature-item p {
+  font-size: 1rem;
+  color: var(--color-dark);
+}
+
+/* About section */
+.about {
+  padding: 4rem 0;
+  background: var(--color-light);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  align-items: center;
+}
+
+.about-text h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--color-dark);
+}
+
+.about-text p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  color: var(--color-dark);
+}
+
+.about-img img {
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Call to action section */
+.cta {
+  background: var(--color-primary);
+  color: var(--color-light);
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.cta h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.cta p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  color: #eff8fa;
+}
+
+.cta .btn-primary {
+  background: var(--color-light);
+  color: var(--color-primary);
+}
+
+.cta .btn-primary:hover {
+  background: #e6f3f5;
+}
+
+/* Contact section */
+.contact {
+  padding: 4rem 0;
+  background: var(--color-accent);
+  text-align: center;
+}
+
+.contact h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.contact p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.contact-info li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Footer */
+footer {
+  background: var(--color-dark);
+  color: var(--color-light);
+  text-align: center;
+  padding: 1rem 0;
+}
+
+footer p {
+  font-size: 0.9rem;
+}
+
+/* Booking form styles */
+.booking-form {
+  padding: 4rem 0;
+  background: var(--color-light);
+}
+
+.booking-form h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-dark);
+}
+
+.booking-form form {
+  max-width: 600px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--color-secondary);
+  border-radius: 6px;
+  font-size: 1rem;
+  background: var(--color-accent);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(127, 198, 207, 0.3);
+}
+
+.summary {
+  margin-top: 2rem;
+  background: var(--color-accent);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.summary h3 {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.summary p {
+  margin-bottom: 0.5rem;
+}
+
+/* Calendar styles */
+.calendar-container {
+  margin-top: 2rem;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.calendar-header button {
+  background: var(--color-primary);
+  color: var(--color-light);
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.calendar-header button:hover {
+  background: #6aaeb6;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.calendar-day {
+  padding: 0.5rem 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.calendar-day.weekday {
+  font-weight: 600;
+  color: var(--color-dark);
+  cursor: default;
+}
+
+.calendar-day.unavailable {
+  background: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.calendar-day.selected {
+  background: var(--color-primary);
+  color: var(--color-light);
+}
+
+.calendar-day.in-range {
+  background: var(--color-secondary);
+  color: var(--color-dark);
+}
+
+.calendar-day.outside-month {
+  color: #bbb;
+  cursor: default;
+}
+
+/* Villa detail styles */
+.villa-hero {
+  position: relative;
+  height: 60vh;
+  background-image: url('../assets/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-dark);
+}
+
+.villa-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(1px);
+}
+
+.villa-hero h1 {
+  position: relative;
+  z-index: 1;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.villa-details {
+  padding: 4rem 0;
+  background: var(--color-light);
+}
+
+.villa-details h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.villa-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.villa-feature {
+  background: var(--color-accent);
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.villa-feature span {
+  font-size: 1.8rem;
+  color: var(--color-primary);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.villa-feature h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.villa-feature p {
+  font-size: 0.95rem;
+  color: var(--color-dark);
+}
+
+/* Price table */
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.price-table th,
+.price-table td {
+  border: 1px solid var(--color-secondary);
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.price-table th {
+  background: var(--color-accent);
+  font-weight: 600;
+}
+
+.price-table caption {
+  caption-side: top;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* House rules */
+.house-rules {
+  margin-bottom: 2rem;
+}
+
+.house-rules h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.house-rules ul {
+  list-style: disc inside;
+  padding-left: 1rem;
+}
+
+.house-rules li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .hero {
+    height: 60vh;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+  nav ul {
+    flex-direction: column;
+    background: var(--color-light);
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 200px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  nav ul.open {
+    transform: translateX(0);
+  }
+  .nav-toggle {
+    display: block;
+  }
+}

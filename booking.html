@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumina Pool Villa – จองบ้านพัก</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="container">
+        <a href="index.html" class="logo">Lumina&nbsp;Pool&nbsp;Villa</a>
+        <nav>
+          <ul>
+            <li><a href="index.html">หน้าหลัก</a></li>
+            <li><a href="villa.html">รายละเอียดวิลล่า</a></li>
+            <li><a href="booking.html" class="active">จอง</a></li>
+            <li><a href="index.html#contact">ติดต่อเรา</a></li>
+          </ul>
+        </nav>
+        <button class="nav-toggle" aria-label="เปิดเมนู">☰</button>
+      </div>
+    </header>
+
+    <!-- Booking Form Section -->
+    <section class="booking-form">
+      <div class="container">
+        <h2>จองพูลวิลล่า</h2>
+        <form id="bookingForm">
+          <!-- Hidden fields to store selected start and end dates -->
+          <input type="hidden" id="checkin" name="checkin" />
+          <input type="hidden" id="checkout" name="checkout" />
+
+          <div class="form-group">
+            <label>เลือกช่วงวันที่เข้าพัก</label>
+            <div class="calendar-container" id="calendarContainer"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="guests">จำนวนผู้เข้าพัก</label>
+            <input type="number" id="guests" name="guests" min="1" max="10" value="8" required />
+          </div>
+          <div class="form-group">
+            <label for="name">ชื่อ-สกุล</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">เบอร์โทรศัพท์</label>
+            <input type="tel" id="phone" name="phone" required />
+          </div>
+          <div class="form-group">
+            <label for="email">อีเมล</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <button type="submit" class="btn btn-primary">คำนวณราคา</button>
+        </form>
+        <div id="summary" class="summary" hidden></div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Lumina Pool Villa. สงวนลิขสิทธิ์.</p>
+      </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
